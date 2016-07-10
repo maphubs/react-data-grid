@@ -401,6 +401,13 @@ const Cell = React.createClass({
   },
 
   render(): ?ReactElement {
+    const divProps = Object.keys(this.props).reduce((props, key) => {
+      if (['rowIdx', 'idx', 'selected', 'selectedColumn', 'ref', 'column', 'isExpanded', 'isRowSelected', 'cellMetaData', 'handleDragStart', 'cellControls', 'rowData', 'forceUpdate'].indexOf(key) >= 0) {
+        return props;
+      }
+      props[key] = this.props[key];
+      return props;
+    }, {});
     let style = this.getStyle();
 
     let className = this.getCellClass();
@@ -415,7 +422,7 @@ const Cell = React.createClass({
     let dragHandle = (!this.isActive() && ColumnUtils.canEdit(this.props.column, this.props.rowData, this.props.cellMetaData.enableCellSelect)) ? <div className="drag-handle" draggable="true" onDoubleClick={this.onDragHandleDoubleClick}><span style={{display: 'none'}}></span></div> : null;
     let events = this.getEvents();
     return (
-      <div {...this.props} className={className} style={style} onContextMenu={this.onCellContextMenu} {...events}>
+      <div {...divProps} className={className} style={style} onContextMenu={this.onCellContextMenu} {...events}>
       {cellContent}
       {dragHandle}
       </div>
